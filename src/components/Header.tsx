@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import QuoteDialog from "@/components/QuoteDialog";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -48,9 +49,9 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             +1 (234) 567-890
           </a>
-          <Button asChild>
-            <Link to="/contact">Request Quote</Link>
-          </Button>
+          <QuoteDialog>
+            <Button>Request Quote</Button>
+          </QuoteDialog>
         </div>
 
         <button
@@ -79,9 +80,9 @@ const Header = () => {
                 {link.label}
               </Link>
             ))}
-            <Button asChild className="mt-2">
-              <Link to="/contact" onClick={() => setMobileOpen(false)}>Request Quote</Link>
-            </Button>
+            <QuoteDialog>
+              <Button className="mt-2">Request Quote</Button>
+            </QuoteDialog>
           </nav>
         </div>
       )}
