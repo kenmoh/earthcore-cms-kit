@@ -49,9 +49,9 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             +1 (234) 567-890
           </a>
-          <Button asChild>
-            <Link to="/contact">Request Quote</Link>
-          </Button>
+          <QuoteDialog>
+            <Button>Request Quote</Button>
+          </QuoteDialog>
         </div>
 
         <button
