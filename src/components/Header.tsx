@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QuoteDialog from "@/components/QuoteDialog";
+import ThemeToggle from "@/components/ThemeToggle";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -49,6 +50,7 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             +1 (234) 567-890
           </a>
+          <ThemeToggle />
           <QuoteDialog>
             <Button>Request Quote</Button>
           </QuoteDialog>
