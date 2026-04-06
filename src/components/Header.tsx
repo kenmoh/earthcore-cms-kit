@@ -50,6 +50,7 @@ const Header = () => {
             <Phone className="h-4 w-4" />
             +1 (234) 567-890
           </a>
+          <ThemeToggle />
           <QuoteDialog>
             <Button>Request Quote</Button>
           </QuoteDialog>
