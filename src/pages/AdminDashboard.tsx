@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import CmsSection from "@/components/admin/CmsSection";
+import QuoteRequestsAdmin from "@/components/admin/QuoteRequestsAdmin";
 
 const sectionConfigs = [
   {
@@ -117,14 +118,20 @@ const AdminDashboard = () => {
       </header>
 
       <div className="container py-6">
-        <Tabs defaultValue="cms_hero" className="space-y-6">
+        <Tabs defaultValue="quote_requests" className="space-y-6">
           <TabsList className="flex flex-wrap h-auto gap-1">
+            <TabsTrigger value="quote_requests" className="text-xs">
+              Quote Requests
+            </TabsTrigger>
             {sectionConfigs.map((s) => (
               <TabsTrigger key={s.table} value={s.table} className="text-xs">
                 {s.title}
               </TabsTrigger>
             ))}
           </TabsList>
+          <TabsContent value="quote_requests">
+            <QuoteRequestsAdmin />
+          </TabsContent>
           {sectionConfigs.map((s) => (
             <TabsContent key={s.table} value={s.table}>
               <CmsSection config={s} />
