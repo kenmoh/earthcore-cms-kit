@@ -6,19 +6,40 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [product, setProduct] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast({ title: "Message Sent!", description: "We'll get back to you within 24 hours." });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      company: String(data.get("company") || "").trim() || null,
+      email: String(data.get("email") || "").trim(),
+      phone: String(data.get("phone") || "").trim() || null,
+      product: product || null,
+      quantity: String(data.get("quantity") || "").trim() || null,
+      message: String(data.get("message") || "").trim(),
+    };
+
+    const { error } = await supabase.from("quote_requests").insert(payload);
+    setLoading(false);
+
+    if (error) {
+      toast({ title: "Submission failed", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    toast({ title: "Message Sent!", description: "We'll get back to you within 24 hours." });
+    form.reset();
+    setProduct("");
   };
 
   return (
@@ -67,27 +88,27 @@ const Contact = () => {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Full Name *</Label>
-                      <Input id="name" required placeholder="John Smith" maxLength={100} />
+                      <Input id="name" name="name" required placeholder="John Smith" maxLength={100} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="company">Company</Label>
-                      <Input id="company" placeholder="Your Company" maxLength={100} />
+                      <Input id="company" name="company" placeholder="Your Company" maxLength={100} />
                     </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address *</Label>
-                      <Input id="email" type="email" required placeholder="john@company.com" maxLength={255} />
+                      <Input id="email" name="email" type="email" required placeholder="john@company.com" maxLength={255} />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" placeholder="+1 (234) 567-890" maxLength={20} />
+                      <Input id="phone" name="phone" type="tel" placeholder="+1 (234) 567-890" maxLength={20} />
                     </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="product">Product Interest</Label>
-                      <Select>
+                      <Select value={product} onValueChange={setProduct}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a product" />
                         </SelectTrigger>
@@ -101,12 +122,12 @@ const Contact = () => {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="quantity">Estimated Quantity</Label>
-                      <Input id="quantity" placeholder="e.g., 50 tons/month" maxLength={50} />
+                      <Input id="quantity" name="quantity" placeholder="e.g., 50 tons/month" maxLength={50} />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="message">Message *</Label>
-                    <Textarea id="message" required placeholder="Tell us about your requirements..." rows={5} maxLength={2000} />
+                    <Textarea id="message" name="message" required placeholder="Tell us about your requirements..." rows={5} maxLength={2000} />
                   </div>
                   <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto">
                     {loading ? "Sending..." : "Send Message"} <Send className="ml-2 h-4 w-4" />
